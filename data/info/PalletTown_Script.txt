@@ -1,0 +1,48 @@
+/*  
+    Information and memory addresses extracted from the official decompilation project:
+    pret/pokefirered — https://github.com/pret/pokefirered
+    
+    Note: At the time of this project, no license is declared in the repository;
+    it retains existing copyright notices, and permissions should be verified before redistribution.
+*/
+
+PalletTown_EventScript_OakTrigger::
+	famechecker FAMECHECKER_OAK, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
+	textcolor NPC_TEXT_COLOR_MALE
+	delay 30
+	playbgm MUS_OAK, 0
+	message PalletTown_Text_OakDontGoOut
+	waitmessage
+	delay 85
+	closemessage
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
+	waitmovement 0
+	playse SE_PIN
+	applymovement LOCALID_PLAYER, Common_Movement_ExclamationMark
+	waitmovement 0
+	delay 30
+	addobject LOCALID_PALLET_PROF_OAK
+	call_if_eq VAR_TEMP_1, 0, PalletTown_EventScript_OakEnterLeft
+	call_if_eq VAR_TEMP_1, 1, PalletTown_EventScript_OakEnterRight
+	delay 30
+	msgbox PalletTown_Text_OakGrassUnsafeNeedMon
+	closemessage
+	delay 30
+	call_if_eq VAR_TEMP_1, 0, PalletTown_EventScript_OakLeadPlayerToLabLeft
+	call_if_eq VAR_TEMP_1, 1, PalletTown_EventScript_OakLeadPlayerToLabRight
+	opendoor 16, 13
+	waitdooranim
+	applymovement LOCALID_PALLET_PROF_OAK, PalletTown_Movement_OakEnterLab
+	applymovement LOCALID_PLAYER, PalletTown_Movement_PlayerEnterLab
+	waitmovement 0
+	closedoor 16, 13
+	waitdooranim
+	setvar VAR_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB, 1
+	clearflag FLAG_HIDE_OAK_IN_HIS_LAB
+	setvar VAR_MAP_SCENE_PALLET_TOWN_OAK, 1
+	setflag FLAG_HIDE_OAK_IN_PALLET_TOWN
+	setflag FLAG_DONT_TRANSITION_MUSIC
+	warp MAP_PALLET_TOWN_PROFESSOR_OAKS_LAB, 6, 12
+	waitstate
+	releaseall
+	end

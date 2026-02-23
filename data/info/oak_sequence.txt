@@ -1,0 +1,60 @@
+/*  
+    Information and memory addresses extracted from the official decompilation project:
+    pret/pokefirered — https://github.com/pret/pokefirered
+    
+    Note: At the time of this project, no license is declared in the repository;
+    it retains existing copyright notices, and permissions should be verified before redistribution.
+*/
+
+gOakSpeech_Text_WelcomeToTheWorld::
+    .string "Hello, there!\n" -> 0x02021D18
+    .string "Glad to meet you!\p" -> 0x02021D26
+    .string "Welcome to the world of POKéMON!\p" -> 0x02021D38
+    .string "My name is OAK.\p" -> 0x02021D59
+    .string "People affectionately refer to me\n" -> 0x02021D69
+    .string "as the POKéMON PROFESSOR.\p$" -> 0x02021D8B
+
+gOakSpeech_Text_ThisWorld::
+    .string "This world…$" -> 0x02021D18
+
+gOakSpeech_Text_IsInhabitedFarAndWide::
+    .string "…is inhabited far and wide by\n" -> 0x02021D18
+    .string "creatures called POKéMON.\p$" - > 0x02021D36
+
+gOakSpeech_Text_IStudyPokemon::
+    .string "For some people, POKéMON are pets.\n" -> 0x02021D18
+    .string "Others use them for battling.\p" -> 0x02021D3B
+    .string "As for myself…\p" -> 0x02021D59
+    .string "I study POKéMON as a profession.\p$" -> 0x02021D68
+
+gOakSpeech_Text_TellMeALittleAboutYourself::
+    .string "But first, tell me a little about\n" -> 0x02021D18
+    .string "yourself.\p$" -> 0x02021D3A
+
+gOakSpeech_Text_YourNameWhatIsIt::
+    .string "Let's begin with your name.\n" -> 0x02021D18
+    .string "What is it?\p$" -> 0x02021D34
+
+gOakSpeech_Text_SoYourNameIsPlayer::
+    .string "Right…\n" -> 0x02021D18
+    .string "So your name is {PLAYER}.$" -> 0x02021D1F
+
+gOakSpeech_Text_WhatWasHisName::
+    .string "This is my grandson.\p" -> 0x02021D18
+    .string "He's been your rival since you both\n" -> 0x02021D2D
+    .string "were babies.\p" -> 0x02021D51
+    .string "…Erm, what was his name now?$" -> 0x02021D5E
+
+gOakSpeech_Text_ConfirmRivalName::
+    .string "…Er, was it {RIVAL}?$" -> 0x02021D18
+
+gOakSpeech_Text_RememberRivalsName::
+    .string "That's right! I remember now!\n" -> 0x02021D18
+    .string "His name is {RIVAL}!\p$" -> 0x02021D36
+
+gOakSpeech_Text_LetsGo::
+    .string "{PLAYER}!\p" -> 0x02021D18
+    .string "Your very own POKéMON legend is\n" -> 0x02021D1B
+    .string "about to unfold!\p" -> 0x02021D3B
+    .string "A world of dreams and adventures\n" -> 0x02021D4C
+    .string "with POKéMON awaits! Let's go!$" -> 0x02021D6D

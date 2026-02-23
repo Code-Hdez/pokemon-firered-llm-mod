@@ -1,0 +1,10 @@
+# Pokemon FireRed mGBA Bridge — Requirements
+#
+# Runtime: only Python standard library modules needed.
+# No third-party packages required.
+#
+# Python >= 3.10 is required (for match/case, type unions, etc.)
+#
+# Stdlib modules used:
+#   socket, json, sys, os, select, pathlib, dataclasses,
+#   argparse, collections, time, logging, re, enum, typing
