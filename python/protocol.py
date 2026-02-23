@@ -33,6 +33,7 @@ class EventType(str, Enum):
     DIALOG_CLOSE = "dialog_close"
     PAGE_WAIT = "dialog_page_wait"
     PAGE_ADVANCE = "dialog_page_advance"
+    INTRO_TEXT = "intro_text"
     MAP_CHANGE = "map_change"
     MAP_INFO = "map_info"
     READ = "read"

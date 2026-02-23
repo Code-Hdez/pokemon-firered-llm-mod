@@ -45,6 +45,9 @@ gOakSpeech_Text_WhatWasHisName::
     .string "were babies.\p" -> 0x02021D51
     .string "…Erm, what was his name now?$" -> 0x02021D5E
 
+gOakSpeech_Text_YourRivalsNameWhatWasIt::
+    .string "Your rival's name, what was it now?$"
+
 gOakSpeech_Text_ConfirmRivalName::
     .string "…Er, was it {RIVAL}?$" -> 0x02021D18
 
