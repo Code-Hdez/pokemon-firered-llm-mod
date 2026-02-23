@@ -10,33 +10,48 @@ Special thanks to the **[pret team](https://github.com/pret/pokefirered)** for t
 
 ```
 
-pokemon-firered-llm-mod/
+firered_llm/
+├── main.py                       # Top-level entry point
+├── requirements.txt
+├── .gitignore
+├── LICENSE
+│
 ├── lua/                          # mGBA Lua scripts (one per mode)
 │   ├── fingerprint_collector.lua # Read-only dialog event collector
 │   ├── dialog_injector.lua       # Dialog detection + text injection
-│   └── memory_scan_bridge.lua    # Minimal READ/FIND memory scanner
+│   ├── memory_scan_bridge.lua    # Minimal READ/FIND memory scanner
+│   └── lib/                      # Shared Lua library modules
+│       ├── commands.lua          # Command definitions
+│       ├── config.lua            # Configuration constants
+│       ├── dialog.lua            # Dialog detection helpers
+│       ├── injector.lua          # Text injection logic
+│       ├── ipc.lua               # IPC / socket layer
+│       └── utils.lua             # General utilities
 │
 ├── python/                       # Python package root
 │   ├── main.py                   # CLI entry point (3-mode menu)
+│   ├── config.py                 # Global configuration
+│   ├── protocol.py               # IPC message protocol definitions
+│   ├── exceptions.py             # Custom exception types
 │   ├── pokemon_text/             # Pokemon character encoding
 │   │   ├── char_table.py         # DECODE/ENCODE dicts, encode/decode fns
 │   │   └── text_formatter.py     # Word-wrap + pagination for dialog boxes
 │   ├── classifier/               # Dialog classification engine
 │   │   └── dialog_classifier.py  # Two-tier classifier (fingerprint DB + EB8 hints)
+│   ├── ipc/                      # IPC server
+│   │   └── server.py             # TCP socket server (listens for Lua events)
 │   └── apps/                     # Application modules
 │       ├── memory_scan_app.py    # Memory scan server + interactive CLI
 │       ├── inject_test_app.py    # Text injection test server
 │       └── fingerprint_collector_app.py  # Fingerprint collection + per-city storage
 │
 ├── data/                         # All persistent data
-│   ├── fingerprints/             # Per-city fingerprint JSON files
-│   │   └── fingerprint_db.json   # Legacy global fingerprint DB
+│   ├── fingerprints/             # Per-city fingerprint JSON files (generated)
 │   ├── info/                     # Documentation & analysis
 │   │   ├── technical_analysis.md # Reverse engineering notes
-│   │   ├── day_1_logs.txt        # Session logs
+│   │   ├── mGBA_debug_logs_day_1.txt  # Session logs
 │   │   ├── oak_sequence.txt      # Professor Oak dialog sequence
-│   │   ├── gemini_chat.txt       # Gemini conversation log
-│   │   └── gpt_chat.txt          # GPT conversation log
+│   │   └── PalletTown_Script.txt # Pallet Town script dump
 │   └── reference/                # Reference files
 │       └── characters.h          # C header with character encoding table
 │
