@@ -51,6 +51,11 @@ dialog.init(cfg, utils)
 injector.init(cfg, utils)
 commands.init(cfg, utils, ipc)
 
+-- Enable intro/cutscene detection (Oak speech, etc.)
+if cfg.INTRO_DETECT_ENABLED then
+  dialog.set_intro_detect(true)
+end
+
 -- Injection state
 
 local injection_done = false
@@ -105,6 +110,39 @@ dialog.on_page_advance(function(text_hex)
   ipc.send_json(string.format(
     '{"type":"dialog_page_advance","textHex":"%s"}',
     text_hex or ""))
+end)
+
+--  INTRO / CUTSCENE TEXT EVENT
+--  Fires when text appears in the buffer while the overworld script
+--  engine is idle (engine_state == 0).  Catches the Oak intro,
+--  cutscenes, and any other non-script text.
+
+dialog.on_intro_text(function(info)
+  local preview = info.text_hex:sub(1, 64)
+  if #info.text_hex > 64 then preview = preview .. "..." end
+
+  utils.log_info("INTRO", string.format(
+    "TEXT len=%d hex=%s", info.text_len, preview))
+
+  -- Reset injection flag — this is a new message in the sequence
+  injection_done = false
+
+  ipc.send_json(string.format(
+    '{"type":"intro_text","textHex":"%s","len":%d,"frame":%d}',
+    info.text_hex, info.text_len, info.frame))
+
+  -- Manual injection (standalone test mode)
+  if MANUAL_INJECT_ENABLED and not injection_done then
+    utils.log_info("MANUAL", "Injecting intro test message...")
+    local ok, reason = injector.write_text(MANUAL_INJECT_HEX)
+    if ok then
+      dialog.refresh_snapshot()
+      injection_done = true
+      utils.log_info("MANUAL", "SUCCESS")
+    else
+      utils.log_error("MANUAL", "FAILED — " .. reason)
+    end
+  end
 end)
 
 --  IPC COMMANDS
@@ -226,10 +264,11 @@ end)
 dialog.reset()
 
 console:log("")
-console:log("  dialog_injector.lua v3.0 — Detection + Injection")
+console:log("  dialog_injector.lua v3.1 — Detection + Injection + Intro")
 console:log("  TEXT_BUF:       " .. utils.to_hex(cfg.TEXT_BUF))
 console:log("  STATE_ADDR:     " .. utils.to_hex(cfg.STATE_ADDR))
 console:log("  MANUAL_INJECT:  " .. tostring(MANUAL_INJECT_ENABLED))
+console:log("  INTRO_DETECT:   " .. tostring(dialog.is_intro_detect()))
 console:log("  Target:         " .. cfg.HOST .. ":" .. cfg.PORT)
 console:log("  Protocol:       v" .. cfg.PROTO_VERSION)
 console:log("")

@@ -11,7 +11,7 @@ Config.HOST = "127.0.0.1"
 Config.PORT = 35600
 
 -- Protocol
-Config.PROTO_VERSION   = 2
+Config.PROTO_VERSION   = 1
 Config.MAX_MSG_SIZE    = 8192   -- Max bytes per IPC message
 Config.MAX_INJECT_SIZE = 256    -- Max Pokemon-encoded bytes to write
 
@@ -38,6 +38,13 @@ Config.CONNECT_RETRY_FRAMES = 60    -- Frames between TCP reconnect tries
 Config.DEBOUNCE_FRAMES      = 10    -- Min frames between dialog_open events
 Config.BUF_SNAP_LEN         = 32    -- Bytes for buffer-change detection
 Config.MAX_FIND_RESULTS      = 64   -- Cap on FIND command results
+
+-- Intro / cutscene detection
+-- When enabled, dialog.lua also detects text buffer changes while
+-- the script engine is IDLE (engine_state == 0).  This catches the
+-- Oak intro sequence and any other non-script-driven text.
+Config.INTRO_DETECT_ENABLED  = true
+Config.INTRO_DEBOUNCE_FRAMES = 15   -- Min frames between intro text events
 
 -- Logging
 -- 0 = OFF,  1 = ERROR,  2 = INFO,  3 = DEBUG
