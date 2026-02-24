@@ -48,6 +48,10 @@ def print_banner() -> None:
     print("         Collect & classify dialog fingerprints by zone.")
     print("         Lua: lua/fingerprint_collector.lua")
     print()
+    print("    [4]  LLM Inject")
+    print("         Replace NPC dialog with Gemini-generated text.")
+    print("         Lua: lua/dialog_injector.lua")
+    print()
     print("    [0]  Exit")
     print()
     print("-" * 56)
@@ -92,6 +96,16 @@ def run_fingerprint_collector() -> None:
     run(host=host, port=port)
 
 
+def run_llm_inject() -> None:
+    print("\n--- LLM Inject Mode ---\n")
+    host, port = get_connection_params()
+    use_llm_input = input("  Use Gemini LLM? [Y/n]: ").strip().lower()
+    use_llm = use_llm_input != "n"
+    from .apps.llm_inject_app import run
+
+    run(host=host, port=port, use_llm=use_llm)
+
+
 def main() -> None:
     _configure_logging()
 
@@ -112,8 +126,10 @@ def main() -> None:
             run_inject_test()
         elif choice == "3":
             run_fingerprint_collector()
+        elif choice == "4":
+            run_llm_inject()
         else:
-            print(f"\n  Invalid option: {choice!r}. Enter 0–3.\n")
+            print(f"\n  Invalid option: {choice!r}. Enter 0\u20134.\n")
 
 
 if __name__ == "__main__":

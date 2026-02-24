@@ -59,6 +59,7 @@ end
 -- Injection state
 
 local injection_done = false
+local awaiting_llm   = false
 
 --  DIALOG EVENT HANDLERS
 
@@ -80,6 +81,16 @@ dialog.on_dialog_open(function(info)
     info.text_len,
     info.frame))
 
+  -- Buffer freeze: immediately replace the original text with a holding
+  -- pattern ("..." + page-break) so the player never sees the original.
+  -- The LLM response will be written after the page-break when it arrives.
+  if not MANUAL_INJECT_ENABLED then
+    injector.write_holding_pattern()
+    dialog.refresh_snapshot()
+    awaiting_llm = true
+    utils.log_info("DIALOG", "Holding pattern active — awaiting LLM inject")
+  end
+
   -- Manual injection (standalone test mode)
   if MANUAL_INJECT_ENABLED and not injection_done then
     utils.log_info("MANUAL", "Injecting hardcoded test message...")
@@ -98,6 +109,7 @@ dialog.on_dialog_close(function()
   utils.log_info("DIALOG", "CLOSE")
   ipc.send_json('{"type":"dialog_close"}')
   injection_done = false
+  awaiting_llm   = false
 end)
 
 dialog.on_page_wait(function()
@@ -130,6 +142,14 @@ dialog.on_intro_text(function(info)
   ipc.send_json(string.format(
     '{"type":"intro_text","textHex":"%s","len":%d,"frame":%d}',
     info.text_hex, info.text_len, info.frame))
+
+  -- Buffer freeze for intro text too
+  if not MANUAL_INJECT_ENABLED then
+    injector.write_holding_pattern()
+    dialog.refresh_snapshot()
+    awaiting_llm = true
+    utils.log_info("INTRO", "Holding pattern active — awaiting LLM inject")
+  end
 
   -- Manual injection (standalone test mode)
   if MANUAL_INJECT_ENABLED and not injection_done then
@@ -169,7 +189,17 @@ ipc.on_command("INJECT", function(parts, cmd_id)
     return
   end
 
-  local ok, reason = injector.write_text(hex_text:upper())
+  -- If we are in holding-pattern mode, write the LLM content AFTER the
+  -- placeholder page-break so the game shows it on the next page.
+  -- Otherwise fall back to the original full-buffer write.
+  local ok, reason
+  if awaiting_llm then
+    ok, reason = injector.write_at_offset(hex_text:upper(), injector.HOLD_OFFSET)
+    awaiting_llm = false
+  else
+    ok, reason = injector.write_text(hex_text:upper())
+  end
+
   if ok then
     dialog.refresh_snapshot()
     injection_done = true

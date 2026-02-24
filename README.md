@@ -1,5 +1,68 @@
 # FireRed LLM - Pokemon FireRed Dialog Bridge
 
+A bridge between **mGBA** and a **Large Language Model** that gives every NPC in Pokémon FireRed a unique personality. When you talk to an NPC, the original dialog is intercepted, sent to an LLM (Gemini), and replaced in real-time with a fresh, character-consistent response - so no two conversations are ever the same.
+
+### Current state
+
+In this version the LLM takes the original NPC message and **paraphrases** it into a new line of dialog, keeping the meaning but varying the wording each time you talk to that character.
+
+### Roadmap
+
+The next milestone is to tag every player interaction with a **fingerprint** so the system can distinguish between NPCs and objects (signs, bookshelves, item balls, etc.). Once that classification is in place, only NPCs will receive an LLM-generated personality - objects will keep their original text unchanged.
+
+## Getting Started
+
+### Prerequisites
+
+| Tool | Version |
+|------|---------|
+| **mGBA** | 0.10+ (with scripting support) |
+| **Python** | 3.10+ |
+| **Pokémon FireRed ROM** | US version (NOT Rev 1) |
+
+### Installation
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/<your-user>/firered_llm.git
+cd firered_llm
+
+# 2. Create a virtual environment and activate it
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# macOS / Linux
+source .venv/bin/activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Set up your environment variables
+cp .env.example .env
+# Open .env and paste your Gemini API key
+```
+
+### How to Use
+
+> **Follow these steps in order every time you play.**
+
+1. **Open mGBA** and load your Pokémon FireRed ROM.
+2. On the **title screen** (before pressing Start), open the scripting console:
+   **Tools → Scripting**.
+3. In the Scripting window click **File → Load Script…** and pick the Lua script for the mode you want:
+   | Mode | Lua script |
+   |------|------------|
+   | Memory Scan | `lua/memory_scan_bridge.lua` |
+   | Inject Test | `lua/dialog_injector.lua` |
+   | Fingerprint Collector | `lua/fingerprint_collector.lua` |
+   | **LLM Inject** | `lua/dialog_injector.lua` |
+4. **Run the Python side** in a terminal (with the virtual environment activated):
+   ```bash
+   python main.py
+   ```
+5. Select the matching option from the menu (e.g. `4` for LLM Inject).
+6. Press **Start** on the title screen and play normally - every NPC conversation will now be rewritten by the LLM.
+
 ## Inspiration & Credits
 
 This project was inspired by **[josh](https://www.youtube.com/@joshycodes)** and his project **[animal-crossing-llm-mod](https://github.com/vuciv/animal-crossing-llm-mod)**.
@@ -62,36 +125,44 @@ firered_llm/
 
 - **mGBA** 0.10+ with scripting support
 - **Python** 3.10+
-- No external Python packages needed (stdlib only: `socket`, `json`, `pathlib`)
+- **Gemini API key** - needed for LLM Inject mode (option 4). See [`.env.example`](.env.example) for setup.
+- Modes 1-3 use the standard library only; mode 4 additionally requires `google-genai` and `python-dotenv` (listed in `requirements.txt`).
 
-## Quick Start
+## Modes
 
 ### 1. Memory Scanner (explore GBA memory)
 
 ```bash
-python -m python.main
+python main.py
 # Select option 1 - Memory Scan
 ```
-
-Then in mGBA: **Tools → Scripting → Load Script** → `lua/memory_scan_bridge.lua`
+Lua script: `lua/memory_scan_bridge.lua`
 
 ### 2. Text Injection Test (replace NPC dialog)
 
 ```bash
-python -m python.main
+python main.py
 # Select option 2 - Inject Test
 ```
-
-Then in mGBA: **Tools → Scripting → Load Script** → `lua/dialog_injector.lua`
+Lua script: `lua/dialog_injector.lua`
 
 ### 3. Fingerprint Collector (classify every NPC interaction)
 
 ```bash
-python -m python.main
+python main.py
 # Select option 3 - Fingerprint Collector
 ```
+Lua script: `lua/fingerprint_collector.lua`
 
-Then in mGBA: **Tools → Scripting → Load Script** → `lua/fingerprint_collector.lua`
+### 4. LLM Inject (Gemini-powered dialog rewrite)
+
+```bash
+python main.py
+# Select option 4 - LLM Inject
+```
+Lua script: `lua/dialog_injector.lua`
+
+> Requires a valid `GEMINI_API_KEY` in your `.env` file.
 
 ## Architecture
 
