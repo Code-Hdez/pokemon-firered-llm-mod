@@ -24,7 +24,7 @@ The next milestone is to tag every player interaction with a **fingerprint** so 
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/<your-user>/firered_llm.git
+git clone https://github.com/Code-Hdez/pokemon-firered-llm-mod.git
 cd firered_llm
 
 # 2. Create a virtual environment and activate it
